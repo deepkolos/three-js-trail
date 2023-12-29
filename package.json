@@ -1,15 +1,25 @@
 {
   "name": "three-js-trail",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
+  "author": "DeepKolos<deepkolos@qq.com>",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build-lib": "vite build -c vite.lib.ts",
+    "build-example": "vite build",
     "preview": "vite preview"
+  },
+  "main": "./lib/Trail.umd.js",
+  "module": "./lib/Trail.js",
+  "exports": {
+    ".": {
+      "import": "./lib/Trail.js",
+      "require": "./lib/Trail.umd.cjs"
+    }
   },
   "sideEffects": false,
   "devDependencies": {
+    "@types/node": "^20.10.5",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   },

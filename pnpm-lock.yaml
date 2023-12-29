@@ -9,12 +9,15 @@ dependencies:
     version: 0.160.0
 
 devDependencies:
+  '@types/node':
+    specifier: ^20.10.5
+    version: 20.10.5
   typescript:
     specifier: ^5.2.2
     version: 5.3.3
   vite:
     specifier: ^5.0.8
-    version: 5.0.10
+    version: 5.0.10(@types/node@20.10.5)
 
 packages:
 
@@ -334,6 +337,12 @@ packages:
     dev: true
     optional: true
 
+  /@types/node@20.10.5:
+    resolution: {integrity: sha512-nNPsNE65wjMxEKI93yOP+NPGGBJz/PoN3kZsVLee0XMiJolxSekEVD8wRwBUBqkwc7UWop0edW50yrCQW4CyRw==}
+    dependencies:
+      undici-types: 5.26.5
+    dev: true
+
   /@types/stats.js@0.17.3:
     resolution: {integrity: sha512-pXNfAD3KHOdif9EQXZ9deK82HVNaXP5ZIF5RP2QG6OQFNTaY2YIetfrE9t528vEreGQvEPRDDc8muaoYeK0SxQ==}
     dev: false
@@ -453,7 +462,11 @@ packages:
     hasBin: true
     dev: true
 
-  /vite@5.0.10:
+  /undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+    dev: true
+
+  /vite@5.0.10(@types/node@20.10.5):
     resolution: {integrity: sha512-2P8J7WWgmc355HUMlFrwofacvr98DAjoE52BfdbwQtyLH06XKwaL/FMnmKM2crF0iX4MpmMKoDlNCB1ok7zHCw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -481,6 +494,7 @@ packages:
       terser:
         optional: true
     dependencies:
+      '@types/node': 20.10.5
       esbuild: 0.19.10
       postcss: 8.4.32
       rollup: 4.9.1
