@@ -10,7 +10,7 @@ import {
   Scene,
   WebGLRenderer,
 } from 'three';
-import Trail from '../src/Trail';
+import { Trail } from '../src';
 
 const canvas = document.getElementById('canvas')!;
 

@@ -9,7 +9,7 @@ export class TrailGeometry extends BufferGeometry {
   get boundingSphere() {
     return this.updated ? SPHERE : null;
   }
-  set boundingSphere(v: null | Sphere) {}
+  set boundingSphere(_: null | Sphere) {}
 
   computeBoundingSphere() {
     this.updated = true;

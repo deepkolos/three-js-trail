@@ -27,7 +27,7 @@ function getPos(mat4: Matrix4, v3: Vector3) {
 
 const PLANE_VERTEX = [new Vector3(-1.0, 0.0, 0.0), new Vector3(1.0, 0.0, 0.0)];
 
-export default class Trail extends Mesh<TrailGeometry, TrailMaterial> {
+export class Trail extends Mesh<TrailGeometry, TrailMaterial> {
   readonly frustumCulled = true; // 用于触发geometry更新的钩子
   length = 20;
   time = 0.8;

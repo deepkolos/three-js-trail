@@ -80,7 +80,7 @@ export class TrailMaterial extends RawShaderMaterial {
   side = DoubleSide;
   // wireframe = true;
 
-  onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera) {
+  onBeforeRender(_renderer: WebGLRenderer, _scene: Scene, camera: Camera) {
     this.uniforms.viewMatrix.value = camera.matrixWorldInverse;
     this.uniforms.projection.value = camera.projectionMatrix;
   }
