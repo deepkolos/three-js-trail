@@ -11,6 +11,7 @@ import {
   WebGLRenderer,
 } from 'three';
 import { Trail } from '../src';
+import TrailParticle from '../src/TrailParticle';
 
 const canvas = document.getElementById('canvas')!;
 
@@ -32,12 +33,16 @@ const ZAxis = new Object3D();
 const box = new Mesh(new BoxGeometry(1, 1), new MeshLambertMaterial({ color: 0xffffff }));
 const trailBox = new Trail();
 const trailLine = new Trail();
+const trailParticle = new TrailParticle();
 box.position.x = 5;
 trailBox.position.x = 5;
+trailParticle.position.x = 5;
+trailBox.scale.setScalar(0.25);
 // box.visible = false;
 // trailBox.visible = false;
+// trailParticle.visible = false;
 trailLine.visible = false;
-ZAxis.add(box, trailBox);
+ZAxis.add(box, trailBox, trailParticle);
 YAxis.add(ZAxis);
 scene.add(YAxis, camera, trailLine);
 scene.add(new AmbientLight(0xffffff, 0.2));

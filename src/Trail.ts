@@ -9,26 +9,23 @@ import {
   DynamicDrawUsage,
   FloatType,
   WebGLRenderer,
-  Vector2,
 } from 'three';
 import { TrailMaterial } from './TrailMaterial';
-import { TrailGeometry } from './TrialGeometry';
+import { UpdatableBufferGeometry } from './UpdatableGeometry';
+import {
+  PLANE_VERTEX,
+  getPos,
+  TMP_V3_0,
+  TMP_V3_1,
+  TMP_BrushVertex,
+  TMP_F32_4,
+  TMP_V2,
+  TMP_DataTexture,
+} from './utils';
 
-const TMP_V2 = new Vector2();
-const TMP_V3_0 = new Vector3();
-const TMP_V3_1 = new Vector3();
-const TMP_F32_4 = new Float32Array(4);
-const TMP_BrushVertex: Vector3[] = new Array(64).fill(0).map(_ => new Vector3());
-const TMP_DataTexture = new DataTexture(TMP_F32_4, 1, 1, RGBAFormat, FloatType);
-
-function getPos(mat4: Matrix4, v3: Vector3) {
-  return v3.set(mat4.elements[12], mat4.elements[13], mat4.elements[14]);
-}
-
-const PLANE_VERTEX = [new Vector3(-1.0, 0.0, 0.0), new Vector3(1.0, 0.0, 0.0)];
-
-export class Trail extends Mesh<TrailGeometry, TrailMaterial> {
+export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
   readonly frustumCulled = true; // 用于触发geometry更新的钩子
+
   length = 20;
   time = 0.8;
   emitDistance = 0.1;
@@ -60,7 +57,7 @@ export class Trail extends Mesh<TrailGeometry, TrailMaterial> {
   renderer?: WebGLRenderer;
 
   constructor(material = new TrailMaterial(), brushVertex = PLANE_VERTEX) {
-    super(new TrailGeometry(), material);
+    super(new UpdatableBufferGeometry(), material);
 
     this.brushVertex = brushVertex;
     this.brushVertexLen = brushVertex.length;
