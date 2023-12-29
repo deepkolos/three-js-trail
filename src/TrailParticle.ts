@@ -10,7 +10,7 @@ import {
 } from 'three';
 import { UpdatableInstancedBufferGeometry } from './UpdatableGeometry';
 import { TrailParticleMaterial } from './TrailParticleMaterial';
-import { TMP_V3_0, TMP_V3_1, getPos } from './utils';
+import { TMP_V3_0, TMP_V3_1, TMP_V3_2, getPos } from './utils';
 
 export default class TrailParticle extends InstancedMesh<
   UpdatableInstancedBufferGeometry,
@@ -39,7 +39,7 @@ export default class TrailParticle extends InstancedMesh<
   emittedCount = 0;
   unEmitDistance = 0; // 上次未触发emit的距离
   cursor?: { low: number; high: number; len: number; absLen: number };
-  avgEmitCount = -1;
+  // avgEmitCount = -1;
   shape: BufferGeometry;
   lastTimestamp?: number;
 
@@ -59,9 +59,8 @@ export default class TrailParticle extends InstancedMesh<
     delete this.cursor;
     delete this.lastTargetPose;
     this.emitting = true;
-    this.avgEmitCount = -1;
+    // this.avgEmitCount = -1;
   }
-
 
   initGeometry() {
     // seed birthTime position.x position.y position.z
@@ -112,12 +111,11 @@ export default class TrailParticle extends InstancedMesh<
 
     if (emitCountU32 < 1) return;
     emitCountU32 = Math.min(this.length, emitCountU32);
-    // TODO emit 粒子随机分布到路径沿线上, 而非触发emit的那个点, 不然速度快会导致大量粒子集中在一个点上
-    emitCountU32 =
-      this.avgEmitCount === -1
-        ? emitCountU32
-        : ((Math.min(emitCountU32, this.avgEmitCount * 1.45) + this.avgEmitCount) * 0.5) | 0;
-    this.avgEmitCount = emitCountU32;
+    // emitCountU32 =
+    //   this.avgEmitCount === -1
+    //     ? emitCountU32
+    //     : ((Math.min(emitCountU32, this.avgEmitCount * 1.45) + this.avgEmitCount) * 0.5) | 0;
+    // this.avgEmitCount = emitCountU32;
 
     const { cursor, length, currTime, material } = this;
     const oldHigh = cursor.high;
@@ -127,10 +125,11 @@ export default class TrailParticle extends InstancedMesh<
       // data
       buffers.buffer[offset] = Math.random();
       buffers.buffer[offset + 1] = currTime;
-      // position
-      buffers.buffer[offset + 2] = currPosition.x + (Math.random() * 2 - 1) * this.spawnRadius;
-      buffers.buffer[offset + 3] = currPosition.y + (Math.random() * 2 - 1) * this.spawnRadius;
-      buffers.buffer[offset + 4] = currPosition.z + (Math.random() * 2 - 1) * this.spawnRadius;
+      // position 均匀在轨迹上出现粒子
+      TMP_V3_2.lerpVectors(lastPosition, currPosition, (i + 1) / emitCountU32);
+      buffers.buffer[offset + 2] = TMP_V3_2.x + (Math.random() * 2 - 1) * this.spawnRadius;
+      buffers.buffer[offset + 3] = TMP_V3_2.y + (Math.random() * 2 - 1) * this.spawnRadius;
+      buffers.buffer[offset + 4] = TMP_V3_2.z + (Math.random() * 2 - 1) * this.spawnRadius;
       // 更新指针
       cursor.high = (cursor.high + 1) % length;
     }

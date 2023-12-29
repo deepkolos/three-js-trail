@@ -3,6 +3,7 @@ import { Vector2, Vector3, DataTexture, RGBAFormat, FloatType, Matrix4 } from 't
 export const TMP_V2 = new Vector2();
 export const TMP_V3_0 = new Vector3();
 export const TMP_V3_1 = new Vector3();
+export const TMP_V3_2 = new Vector3();
 export const TMP_F32_4 = new Float32Array(4);
 export const TMP_BrushVertex: Vector3[] = new Array(64).fill(0).map(_ => new Vector3());
 export const TMP_DataTexture = new DataTexture(TMP_F32_4, 1, 1, RGBAFormat, FloatType);
