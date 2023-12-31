@@ -4,13 +4,15 @@
 
 > r159+ 依赖 updateRanges 功能
 
-![](./example/Trail.gif)
+| 默认                                 | 自定义材质                                         |
+| ------------------------------------ | -------------------------------------------------- |
+| ![](./example/screenshots/Trail.gif) | ![](./example/screenshots/TrailCustomMaterial.gif) |
 
 ### 粒子支持快速运动
 
-| 不支持快速运动                               | 支持快速运动                         |
-| -------------------------------------------- | ------------------------------------ |
-| ![](./example/TrailParticleFastArtifact.gif) | ![](./example/TrailParticleFast.gif) |
+| 不支持快速运动                                           | 支持快速运动                                     |
+| -------------------------------------------------------- | ------------------------------------------------ |
+| ![](./example/screenshots/TrailParticleFastArtifact.gif) | ![](./example/screenshots/TrailParticleFast.gif) |
 
 # 感谢
 

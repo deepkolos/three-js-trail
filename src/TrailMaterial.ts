@@ -6,6 +6,8 @@ import {
   Matrix4,
   RawShaderMaterial,
   Scene,
+  ShaderMaterialParameters,
+  Texture,
   Vector2,
   Vector4,
   WebGLRenderer,
@@ -62,23 +64,41 @@ void main() {
 export class TrailMaterial extends RawShaderMaterial {
   static FRAG = FRAG;
   static VERT = VERT;
-  uniforms = {
-    viewMatrix: { value: null } as { value: Matrix4 | null },
-    projection: { value: null } as { value: Matrix4 | null },
-    cursor: { value: new Vector4() },
-    brushDataTex: { value: null } as { value: DataTexture | null },
-    brushVertexLen: { value: 0 },
-    timeInfo: { value: new Vector2() },
-    color: { value: new Color(0xffffff) } as { value: Color | null },
+  static SG_FRAG = (head: string, body: string) =>
+    FRAG.replace('#define SG_HEAD', head).replace('#define SG_BODY', body);
+  static SG_VERT = (head: string, body: string) =>
+    VERT.replace('#define SG_HEAD', head).replace('#define SG_BODY', body);
+
+  declare uniforms: {
+    viewMatrix: { value: Matrix4 | null };
+    projection: { value: Matrix4 | null };
+    cursor: { value: Vector4 };
+    brushDataTex: { value: DataTexture | null };
+    brushVertexLen: { value: number };
+    timeInfo: { value: Vector2 };
+    color: { value: Color | null };
   };
 
-  vertexShader = TrailMaterial.VERT;
-  fragmentShader = TrailMaterial.FRAG;
   transparent = true;
   depthWrite = false;
   depthTest = false;
   side = DoubleSide;
   // wireframe = true;
+
+  constructor(
+    params?: ShaderMaterialParameters & { uniforms: Partial<TrailMaterial['uniforms']> },
+  ) {
+    super(params);
+    this.uniforms.viewMatrix = { value: null };
+    this.uniforms.projection = { value: null };
+    this.uniforms.cursor = { value: new Vector4() };
+    this.uniforms.brushDataTex = { value: null };
+    this.uniforms.brushVertexLen = { value: 0 };
+    this.uniforms.timeInfo = { value: new Vector2() };
+    this.uniforms.color ??= { value: new Color(0xffffff) };
+    this.vertexShader ??= TrailMaterial.VERT;
+    this.fragmentShader ??= TrailMaterial.FRAG;
+  }
 
   onBeforeRender(_renderer: WebGLRenderer, _scene: Scene, camera: Camera) {
     this.uniforms.viewMatrix.value = camera.matrixWorldInverse;

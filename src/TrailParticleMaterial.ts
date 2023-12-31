@@ -1,4 +1,13 @@
-import { Camera, Matrix4, RawShaderMaterial, Scene, Vector2, Vector4, WebGLRenderer } from 'three';
+import {
+  Camera,
+  Matrix4,
+  RawShaderMaterial,
+  Scene,
+  ShaderMaterialParameters,
+  Vector2,
+  Vector4,
+  WebGLRenderer,
+} from 'three';
 
 const VERT = /* glsl */ `
 attribute float id;
@@ -50,13 +59,20 @@ void main() {
 }`;
 
 export class TrailParticleMaterial extends RawShaderMaterial {
-  uniforms = {
-    viewMatrix: { value: null } as { value: Matrix4 | null },
-    projection: { value: null } as { value: Matrix4 | null },
-    cursor: { value: new Vector4() },
-    timeInfo: { value: new Vector2() },
-    size: { value: 1 },
-    velocity: { value: 1 },
+  static FRAG = FRAG;
+  static VERT = VERT;
+  static SG_FRAG = (head: string, body: string) =>
+    FRAG.replace('#define SG_HEAD', head).replace('#define SG_BODY', body);
+  static SG_VERT = (head: string, body: string) =>
+    VERT.replace('#define SG_HEAD', head).replace('#define SG_BODY', body);
+
+  declare uniforms: {
+    viewMatrix: { value: Matrix4 | null };
+    projection: { value: Matrix4 | null };
+    cursor: { value: Vector4 };
+    timeInfo: { value: Vector2 };
+    size: { value: number };
+    velocity: { value: number };
   };
 
   vertexShader = VERT;
@@ -64,11 +80,22 @@ export class TrailParticleMaterial extends RawShaderMaterial {
   transparent = true;
   depthWrite = false;
 
+  constructor(
+    params?: ShaderMaterialParameters & { uniforms: Partial<TrailParticleMaterial['uniforms']> },
+  ) {
+    super(params);
+    this.uniforms.viewMatrix = { value: null };
+    this.uniforms.projection = { value: null };
+    this.uniforms.cursor = { value: new Vector4() };
+    this.uniforms.timeInfo = { value: new Vector2() };
+    this.uniforms.size = { value: 0 };
+    this.uniforms.velocity = { value: 0 };
+    this.vertexShader ??= VERT;
+    this.fragmentShader ??= FRAG;
+  }
+
   onBeforeRender(_renderer: WebGLRenderer, _scene: Scene, camera: Camera) {
     this.uniforms.viewMatrix.value = camera.matrixWorldInverse;
     this.uniforms.projection.value = camera.projectionMatrix;
   }
-
-  static FRAG = FRAG;
-  static VERT = VERT;
 }

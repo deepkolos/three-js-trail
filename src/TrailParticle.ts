@@ -17,18 +17,17 @@ export default class TrailParticle extends InstancedMesh<
   TrailParticleMaterial
 > {
   readonly frustumCulled = true; // 用于触发geometry更新的钩子
-
-  length = 128;
-  time = 1;
-  size = 0.2;
-  velocity = 1;
-  emitOverDistance = 10;
+  // 配置
+  length: number;
+  time: number;
+  size: number;
+  velocity: number;
+  emitOverDistance: number;
+  spawnRadius: number;
   emitting = true;
-  spawnRadius = 0.1;
 
   // 实例
   renderer?: WebGLRenderer;
-
   buffers?: {
     buffer: Float32Array;
     bufferAttr: InterleavedBufferAttribute;
@@ -44,15 +43,29 @@ export default class TrailParticle extends InstancedMesh<
   lastTimestamp?: number;
 
   constructor(
+    config: {
+      length?: number;
+      time?: number;
+      size?: number;
+      velocity?: number;
+      emitOverDistance?: number;
+      spawnRadius?: number;
+    } = {},
     material = new TrailParticleMaterial(),
     shape: BufferGeometry = new PlaneGeometry(1, 1),
   ) {
     // instanceMatrix没有被使用, 不生成16*count*4字节内存
     super(new UpdatableInstancedBufferGeometry(), material, 0);
+    this.time = config.time ?? 1;
+    this.size = config.size ?? 0.2;
+    this.velocity = config.velocity ?? 1;
+    this.spawnRadius = config.spawnRadius ?? 0.1;
+    this.emitOverDistance = config.emitOverDistance ?? 10;
+    this.length = config.length ?? 128;
     this.count = this.length;
     this.shape = shape;
     this.boundingSphere = undefined as any;
-    this.initGeometry();
+    this.init();
   }
 
   reset() {
@@ -62,7 +75,7 @@ export default class TrailParticle extends InstancedMesh<
     // this.avgEmitCount = -1;
   }
 
-  initGeometry() {
+  init() {
     // seed birthTime position.x position.y position.z
     const buffer = new Float32Array(this.length * 5);
     const interleaveBuffer = new InstancedInterleavedBuffer(buffer, 5).setUsage(DynamicDrawUsage);

@@ -12,27 +12,17 @@ import {
 } from 'three';
 import { TrailMaterial } from './TrailMaterial';
 import { UpdatableBufferGeometry } from './UpdatableGeometry';
-import {
-  PLANE_VERTEX,
-  getPos,
-  TMP_V3_0,
-  TMP_V3_1,
-  TMP_BrushVertex,
-  TMP_F32_4,
-  TMP_V2,
-  TMP_DataTexture,
-} from './utils';
+import { PLANE_VERTEX, getPos, TMP_V3_0, TMP_V3_1, TMP_BrushVertex } from './utils';
 
 export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
   readonly frustumCulled = true; // 用于触发geometry更新的钩子
 
-  length = 20;
-  time = 0.8;
-  emitDistance = 0.1;
+  length: number;
+  time: number;
+  emitDistance: number;
   emitting = true;
-  // color = new Color(0xffffff);
-  // alignment: 'view' | 'transformZ' = 'view';
-  // textureMode: 'stretch' | 'tile' = 'stretch';
+  // alignment: 'view' | 'transformZ';
+  // textureMode: 'stretch' | 'tile';
 
   brushDataTex!: DataTexture;
   buffers!: {
@@ -56,21 +46,18 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
   lastTimestamp?: number;
   renderer?: WebGLRenderer;
 
-  constructor(material = new TrailMaterial(), brushVertex = PLANE_VERTEX) {
+  constructor(
+    config: { length?: number; time?: number; emitDistance?: number } = {},
+    material = new TrailMaterial(),
+    brushVertex = PLANE_VERTEX,
+  ) {
     super(new UpdatableBufferGeometry(), material);
+    this.length = config.length ?? 20;
+    this.time = config.time ?? 1;
+    this.emitDistance = config.emitDistance ?? 1;
 
     this.brushVertex = brushVertex;
-    this.brushVertexLen = brushVertex.length;
-    this.brushFaceLen = (this.brushVertexLen - 1) * 2;
-    this.brushIndicesLen = this.brushFaceLen * 3;
-
-    this.vertexLen = this.length * this.brushVertexLen;
-    this.faceLen = this.length * this.brushFaceLen;
-
-    this.material.uniforms.brushVertexLen.value = brushVertex.length - 1;
-    this.material.uniforms.cursor.value.w = this.length - 1;
-    this.material.uniforms.timeInfo.value.y = this.time;
-    this.initGeometry();
+    this.init();
   }
 
   reset() {
@@ -83,7 +70,18 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
     this.emitting = false;
   }
 
-  initGeometry() {
+  init() {
+    this.brushVertexLen = this.brushVertex.length;
+    this.brushFaceLen = (this.brushVertexLen - 1) * 2;
+    this.brushIndicesLen = this.brushFaceLen * 3;
+
+    this.vertexLen = this.length * this.brushVertexLen;
+    this.faceLen = this.length * this.brushFaceLen;
+
+    this.material.uniforms.brushVertexLen.value = this.brushVertex.length - 1;
+    this.material.uniforms.cursor.value.w = this.length - 1;
+    this.material.uniforms.timeInfo.value.y = this.time;
+
     const { length, brushVertexLen, vertexLen, faceLen } = this;
     const brushData = new Float32Array(length * 4);
     const brushDataTex = new DataTexture(brushData, length, 1, RGBAFormat, FloatType);
@@ -190,12 +188,19 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
     }
     this.updateAttr(buffers.positionAttr, posOffset, stride);
 
-    TMP_F32_4[0] = center.x;
-    TMP_F32_4[1] = center.y;
-    TMP_F32_4[2] = center.z;
-    TMP_F32_4[3] = time;
-    TMP_V2.x = index;
-    renderer.copyTextureToTexture(TMP_V2, TMP_DataTexture, brushDataTex);
+    // 当有多个texture uniform时 有bug...
+    // TMP_F32_4[0] = center.x;
+    // TMP_F32_4[1] = center.y;
+    // TMP_F32_4[2] = center.z;
+    // TMP_F32_4[3] = time;
+    // TMP_V2.x = index;
+    // renderer.copyTextureToTexture(TMP_V2, TMP_DataTexture, brushDataTex);
+    const offset = index * 4;
+    brushDataTex.image.data[offset] = center.x;
+    brushDataTex.image.data[offset + 1] = center.y;
+    brushDataTex.image.data[offset + 2] = center.z;
+    brushDataTex.image.data[offset + 3] = time;
+    brushDataTex.needsUpdate = true;
   }
 
   linkBrush(indexA: number, indexB: number) {
@@ -240,5 +245,7 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
   dispose(): void {
     this.material.dispose();
     this.geometry.dispose();
+    this.brushDataTex.dispose();
+    this.visible = false;
   }
 }
