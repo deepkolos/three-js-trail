@@ -1,14 +1,15 @@
 import { Color, IUniform, Texture } from 'three';
 import { TrailParticleMaterial } from '../src';
 
-const VERT_SG_HEAD = /* glsl */ `varying vec2 vUV;`;
-const VERT_SG_BODY = /* glsl */ `vUV = uv;`;
-const FRAG_SG_HEAD = /* glsl */ `varying vec2 vUV; uniform sampler2D map; uniform vec3 color;`;
-const FRAG_SG_BODY = /* glsl */ `gl_FragColor = texture2D(map, vUV) * vec4(color, 1.);`;
-
 export class CustomTrailParticleMaterial extends TrailParticleMaterial {
-  static VERT = TrailParticleMaterial.SG_VERT(VERT_SG_HEAD, VERT_SG_BODY);
-  static FRAG = TrailParticleMaterial.SG_FRAG(FRAG_SG_HEAD, FRAG_SG_BODY);
+  static VERT = TrailParticleMaterial.SG_VERT(
+    /* glsl */ `varying vec2 vUV;`,
+    /* glsl */ `vUV = uv;`,
+  );
+  static FRAG = TrailParticleMaterial.SG_FRAG(
+    /* glsl */ `varying vec2 vUV; uniform sampler2D map; uniform vec3 color;`,
+    /* glsl */ `gl_FragColor = texture2D(map, vUV) * vec4(color, 1.);`,
+  );
 
   vertexShader = CustomTrailParticleMaterial.VERT;
   fragmentShader = CustomTrailParticleMaterial.FRAG;

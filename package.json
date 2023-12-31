@@ -7,7 +7,8 @@
     "dev": "vite",
     "build-lib": "vite build -c vite.lib.ts",
     "build-example": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublish": "pnpm build-lib"
   },
   "main": "./lib/Trail.umd.js",
   "module": "./lib/Trail.js",
