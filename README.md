@@ -17,7 +17,7 @@
 ```sh
 > pnpm i three-js-trail -S
 ```
-
+详细见[example/main.ts](./example/main.ts)
 ```ts
 import { IUniform, Texture, Color } from 'three';
 import { Trail, TrailParticle, TrailMaterial, TrailParticleMaterial } from 'three-js-trail';
