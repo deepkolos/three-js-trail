@@ -22,7 +22,6 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
   emitDistance: number;
   emitting = true;
   // alignment: 'view' | 'transformZ';
-  // textureMode: 'stretch' | 'tile';
 
   brushDataTex!: DataTexture;
   buffers!: {

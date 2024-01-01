@@ -19,7 +19,7 @@
 ```
 详细见[example/main.ts](./example/main.ts)
 ```ts
-import { IUniform, Texture, Color } from 'three';
+import { IUniform, Texture, Color, TextureLoader } from 'three';
 import { Trail, TrailParticle, TrailMaterial, TrailParticleMaterial } from 'three-js-trail';
 
 const trailDefault = new Trail(/* config */, /* TrailMaterial */, /* ShapeVertex */);
@@ -71,6 +71,9 @@ class CustomTrailParticleMaterial extends TrailParticleMaterial {
   }
 }
 
+const textureLoader = new TextureLoader();
+const trailTexture = await textureLoader.loadAsync(trail);
+const particleTexture = await textureLoader.loadAsync(particle);
 const trailCustom = new Trail({}, new CustomTrailMaterial(trailTexture));
 const trailParticleCustom = new TrailParticle(
   { size: 1, velocity: 2 },
