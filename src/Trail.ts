@@ -8,7 +8,6 @@ import {
   StaticDrawUsage,
   DynamicDrawUsage,
   FloatType,
-  WebGLRenderer,
 } from 'three';
 import { TrailMaterial } from './TrailMaterial';
 import { UpdatableBufferGeometry } from './UpdatableGeometry';
@@ -43,7 +42,6 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
   lastTargetPose?: Matrix4;
   currTime = 0; // 单位秒
   lastTimestamp?: number;
-  renderer?: WebGLRenderer;
 
   constructor(
     config: { length?: number; time?: number; emitDistance?: number } = {},
@@ -112,14 +110,14 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
   }
 
   onGeometryUpdate = () => {
-    if (!this.visible || !this.renderer) return;
+    if (!this.visible) return;
     // 更新时间
     const now = Date.now();
     if (this.lastTimestamp !== undefined) this.currTime += (now - this.lastTimestamp) * 0.001;
     this.lastTimestamp = now;
     this.material.uniforms.timeInfo.value.x = this.currTime;
 
-    const { geometry, material, emitting, currTime, renderer } = this;
+    const { geometry, material, emitting, currTime } = this;
     if (!emitting) return;
 
     const currPose = this.matrixWorld;
@@ -127,7 +125,7 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
     if (!this.brushCursor) this.brushCursor = { low: 0, high: 0, len: 0 };
     if (!this.lastTargetPose) {
       this.lastTargetPose = currPose.clone();
-      this.setBrush(0, currPose, currTime, renderer);
+      this.setBrush(0, currPose, currTime);
       geometry.drawRange.count = 0;
       return;
     }
@@ -142,7 +140,7 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
       this.lastTargetPose.copy(currPose);
       const nextHigh = (brushCursor.high + 1) % length;
       // 压入新的brush
-      this.setBrush(nextHigh, currPose, currTime, renderer);
+      this.setBrush(nextHigh, currPose, currTime);
       // 更新链接
       this.linkBrush(brushCursor.high, nextHigh);
       this.unlinkBrush(nextHigh);
@@ -155,7 +153,7 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
       }
     } else {
       // 更新最后生成的brush
-      this.setBrush(brushCursor.high, currPose, currTime, renderer);
+      this.setBrush(brushCursor.high, currPose, currTime);
     }
 
     // 更新材质
@@ -165,12 +163,11 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
     material.uniforms.timeInfo.value.y = this.time;
   };
 
-  onBeforeRender(renderer: WebGLRenderer): void {
-    this.renderer = renderer;
+  onBeforeRender(): void {
     this.geometry.updated = false;
   }
 
-  setBrush(index: number, pose: Matrix4, time: number, renderer: WebGLRenderer) {
+  setBrush(index: number, pose: Matrix4, time: number) {
     const { buffers, brushVertexLen, brushVertex, brushDataTex } = this;
     const center = getPos(pose, TMP_V3_0);
     const stride = brushVertexLen * 3;

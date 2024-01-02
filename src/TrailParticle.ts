@@ -1,6 +1,5 @@
 import {
   Matrix4,
-  WebGLRenderer,
   PlaneGeometry,
   InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
@@ -27,7 +26,6 @@ export default class TrailParticle extends InstancedMesh<
   emitting = true;
 
   // 实例
-  renderer?: WebGLRenderer;
   buffers?: {
     buffer: Float32Array;
     bufferAttr: InterleavedBufferAttribute;
@@ -177,8 +175,7 @@ export default class TrailParticle extends InstancedMesh<
     material.uniforms.velocity.value = this.velocity;
   };
 
-  onBeforeRender(renderer: WebGLRenderer): void {
-    this.renderer = renderer;
+  onBeforeRender(): void {
     this.geometry.updated = false;
   }
 
