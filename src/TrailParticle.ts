@@ -63,6 +63,7 @@ export default class TrailParticle extends InstancedMesh<
     this.count = this.length;
     this.shape = shape;
     this.boundingSphere = undefined as any;
+    this.currTime = this.time; // 消除buffer默认数据的渲染
     this.init();
   }
 
