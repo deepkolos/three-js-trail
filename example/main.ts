@@ -63,7 +63,7 @@ trailBox.scale.setScalar(0.25);
 box.visible = false;
 // trailBox.visible = false;
 // trailParticle.visible = false;
-trailLine.visible = false;
+// trailLine.visible = false;
 ZAxis.add(box, trailBox, trailParticle);
 YAxis.add(ZAxis);
 scene.add(YAxis, camera, trailLine);
@@ -80,8 +80,11 @@ const speed = 0.04;
 const renderLoop = () => {
   ZAxis.rotation.z += speed;
   YAxis.rotation.y += speed * 0.35;
-  trailLine.position.y += 1;
-  if (trailLine.position.y > 10) trailLine.position.y = 0;
+  trailLine.position.y += 0.3;
+  if (trailLine.position.y > 10) {
+    trailLine.position.y = -10;
+    trailLine.reset();
+  }
   renderer.render(scene, camera);
   requestAnimationFrame(renderLoop);
   // setTimeout(renderLoop, 256);
