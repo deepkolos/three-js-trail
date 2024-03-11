@@ -25,9 +25,10 @@ uniform vec2 timeInfo; // currTime time
 varying float vBirthTime;
 
 vec2 uv; // SG使用
-#ifndef BRUSH_DATA
-  #define BRUSH_DATA
+#ifndef TRAIL_DATA
+  #define TRAIL_DATA
   vec4 brushData;
+  float fraction;
 #endif
 
 #define SG_HEAD
@@ -35,7 +36,7 @@ vec2 uv; // SG使用
 void main() {
   brushData = texture2D(brushDataTex, vec2(brushId / cursor.w, 0));
   vBirthTime = brushData.w;
-  float fraction = (timeInfo.x - brushData.w) / timeInfo.y;
+  fraction = (timeInfo.x - brushData.w) / timeInfo.y;
   uv = vec2(fraction, brushVertexId / brushVertexLen);
 
   vec4 positionV4 = vec4(position, 1.0);
