@@ -34,8 +34,8 @@ vec2 uv; // SG使用
 
 void main() {
   brushData = texture2D(brushDataTex, vec2(brushId / cursor.w, 0));
-  float fraction = (timeInfo.x - brushData.w) / (timeInfo.y * (cursor.z / cursor.w));
   vBirthTime = brushData.w;
+  float fraction = (timeInfo.x - brushData.w) / timeInfo.y;
   uv = vec2(fraction, brushVertexId / brushVertexLen);
 
   vec4 positionV4 = vec4(position, 1.0);
