@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build-lib": "vite build -c vite.lib.ts",
-    "build-example": "vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "prepublish": "pnpm build-lib"
   },
