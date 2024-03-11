@@ -1,6 +1,6 @@
 {
   "name": "three-js-trail",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "author": "DeepKolos<deepkolos@qq.com>",
   "scripts": {
@@ -27,12 +27,15 @@
   ],
   "sideEffects": false,
   "devDependencies": {
+    "three": "^0.160.0",
     "@types/node": "^20.10.5",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   },
-  "dependencies": {
-    "@types/three": "^0.160.0",
+  "peerDependencies": {
     "three": "^0.160.0"
+  },
+  "dependencies": {
+    "@types/three": "^0.160.0"
   }
 }

@@ -4,14 +4,14 @@ dependencies:
   '@types/three':
     specifier: ^0.160.0
     version: 0.160.0
-  three:
-    specifier: ^0.160.0
-    version: 0.160.0
 
 devDependencies:
   '@types/node':
     specifier: ^20.10.5
     version: 20.10.5
+  three:
+    specifier: ^0.160.0
+    version: 0.160.0
   typescript:
     specifier: ^5.2.2
     version: 5.3.3
@@ -454,7 +454,7 @@ packages:
 
   /three@0.160.0:
     resolution: {integrity: sha512-DLU8lc0zNIPkM7rH5/e1Ks1Z8tWCGRq6g8mPowdDJpw1CFBJMU7UoJjC6PefXW7z//SSl0b2+GCw14LB+uDhng==}
-    dev: false
+    dev: true
 
   /typescript@5.3.3:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
