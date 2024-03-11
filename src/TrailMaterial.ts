@@ -7,7 +7,6 @@ import {
   RawShaderMaterial,
   Scene,
   ShaderMaterialParameters,
-  Texture,
   Vector2,
   Vector4,
   WebGLRenderer,
@@ -96,8 +95,8 @@ export class TrailMaterial extends RawShaderMaterial {
     this.uniforms.brushVertexLen = { value: 0 };
     this.uniforms.timeInfo = { value: new Vector2() };
     this.uniforms.color ??= { value: new Color(0xffffff) };
-    this.vertexShader ??= TrailMaterial.VERT;
-    this.fragmentShader ??= TrailMaterial.FRAG;
+    this.vertexShader = params?.vertexShader ?? TrailMaterial.VERT;
+    this.fragmentShader = params?.fragmentShader ?? TrailMaterial.FRAG;
   }
 
   onBeforeRender(_renderer: WebGLRenderer, _scene: Scene, camera: Camera) {

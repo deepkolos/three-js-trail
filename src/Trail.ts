@@ -60,7 +60,6 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
   reset() {
     delete this.brushCursor;
     delete this.lastTargetPose;
-    this.emitting = true;
   }
 
   stop() {
@@ -77,7 +76,6 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
 
     this.material.uniforms.brushVertexLen.value = this.brushVertex.length - 1;
     this.material.uniforms.cursor.value.w = this.length - 1;
-    this.material.uniforms.timeInfo.value.y = this.time;
 
     const { length, brushVertexLen, vertexLen, faceLen } = this;
     const brushData = new Float32Array(length * 4);
@@ -116,6 +114,7 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
     if (this.lastTimestamp !== undefined) this.currTime += (now - this.lastTimestamp) * 0.001;
     this.lastTimestamp = now;
     this.material.uniforms.timeInfo.value.x = this.currTime;
+    this.material.uniforms.timeInfo.value.y = this.time;
 
     const { geometry, material, emitting, currTime } = this;
     if (!emitting) return;
@@ -160,7 +159,6 @@ export class Trail extends Mesh<UpdatableBufferGeometry, TrailMaterial> {
     material.uniforms.cursor.value.x = brushCursor.low;
     material.uniforms.cursor.value.y = brushCursor.high;
     material.uniforms.cursor.value.z = brushCursor.len;
-    material.uniforms.timeInfo.value.y = this.time;
   };
 
   onBeforeRender(): void {

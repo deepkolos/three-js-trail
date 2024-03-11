@@ -90,8 +90,8 @@ export class TrailParticleMaterial extends RawShaderMaterial {
     this.uniforms.timeInfo = { value: new Vector2() };
     this.uniforms.size = { value: 0 };
     this.uniforms.velocity = { value: 0 };
-    this.vertexShader ??= VERT;
-    this.fragmentShader ??= FRAG;
+    this.vertexShader = params?.vertexShader ?? VERT;
+    this.fragmentShader = params?.fragmentShader ?? FRAG;
   }
 
   onBeforeRender(_renderer: WebGLRenderer, _scene: Scene, camera: Camera) {

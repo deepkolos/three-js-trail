@@ -52,7 +52,9 @@ async function main() {
   //     fragmentShader: CustomTrailMaterial.FRAG,
   //    }),
   // );
-  const trailLine = new Trail(undefined, new CustomTrailMaterial(trailTexture));
+  const trailLine = new Trail({ time: 0.5 }, new CustomTrailMaterial(trailTexture));
+  // const trailLine = new Trail({ time: 0.5 });
+  // trailLine.material.wireframe = true;
   const trailParticle = new TrailParticle(
     { size: 1, velocity: 2 },
     new CustomTrailParticleMaterial(particleTexture, new Color(0xffc107)),
@@ -77,15 +79,33 @@ async function main() {
     renderer.setSize(innerWidth, innerHeight);
   });
 
+  enum State {
+    Doing,
+    Pending,
+  }
   const speed = 0.04;
+  let idleCount = 0;
+  let state = State.Doing;
   const renderLoop = () => {
     ZAxis.rotation.z += speed;
     YAxis.rotation.y += speed * 0.35;
-    trailLine.position.y += 0.3;
-    if (trailLine.position.y > 10) {
-      trailLine.position.y = -10;
-      trailLine.reset();
+    if (state === State.Doing) {
+      trailLine.position.y += 0.3;
+      if (trailLine.position.y > 10) {
+        state = State.Pending;
+        idleCount = 0;
+        trailLine.emitting = false;
+      }
+    } else {
+      idleCount++;
+      if (idleCount > 2000 / 16) {
+        trailLine.position.y = -10;
+        trailLine.reset();
+        state = State.Doing;
+        trailLine.emitting = true;
+      }
     }
+
     renderer.render(scene, camera);
     requestAnimationFrame(renderLoop);
     // setTimeout(renderLoop, 256);

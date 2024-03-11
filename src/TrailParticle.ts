@@ -70,7 +70,6 @@ export default class TrailParticle extends InstancedMesh<
   reset() {
     delete this.cursor;
     delete this.lastTargetPose;
-    this.emitting = true;
     // this.avgEmitCount = -1;
   }
 

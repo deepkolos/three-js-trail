@@ -6,6 +6,7 @@ export class CustomTrailMaterial extends TrailMaterial {
   static FRAG = TrailMaterial.SG_FRAG(
     /* glsl */ `varying vec2 vUV; uniform sampler2D map;`,
     /* glsl */ `gl_FragColor.a = texture2D(map, vUV).r;`,
+    // /* glsl */ `gl_FragColor = vec4(vUV, 0., 1.0);`,
   );
 
   vertexShader = CustomTrailMaterial.VERT;
