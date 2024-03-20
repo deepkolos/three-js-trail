@@ -31,15 +31,20 @@ float rand(float co){
 #define SG_HEAD
 
 void main() {
+  // 不渲染已消亡粒子
   if (timeInfo.x - timeInfo.y >= instanceData.y) {
     gl_Position = vec4(-2,0,0,0);
   } else {
+    // 粒子生命百分比[0,1]
     float percent = smoothstep(timeInfo.x - timeInfo.y, timeInfo.x, instanceData.y);
+    // 随机速度方向
     vec3 dir = normalize(vec3(instanceData.x, rand(instanceData.x * 5.0), rand(instanceData.x * 2.0)) * 2.0 - 1.0);
-    // 计算不太科学和现有效果复刻为主
+    // 随机速度值
     float currVelocity = rand((instanceData.x + 1.) * 2.) * velocity * 2.0;
+    // 根据时间计算出位移
     vec3 movement = dir * currVelocity * (timeInfo.x - instanceData.y);
     vec4 positionV4 = vec4(position * size * percent + instancePosition + movement, 1.0);
+    // 支持ShaderGraph自定义增加更多效果
     #define SG_BODY
     gl_Position = projection * viewMatrix * positionV4;
     vPercent = percent;
